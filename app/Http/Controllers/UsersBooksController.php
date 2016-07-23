@@ -28,25 +28,23 @@ class UsersBooksController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Add book to user.
      *
-     * @param  int $user_id
-     * @param  \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $user_id
+     * @param  int  $book_id
      * @return \Illuminate\Http\Response
      */
-    public function store($user_id, Request $request)
+    public function update($user_id, Request $request, $book_id)
     {
-        $user = User::findOrFail($user_id);
-        $book = Book::findOrFail($request->id);
-//        $book->create($request->only('title', 'author', 'year', 'genre'));
+        $user = User::find($user_id);
+        $book = Book::find($book_id);
         $book->user()->associate($user);
         $book->save();
-
+        $user->books;
         return Response::json([
-            'data' => $book
+            'data' => $user
         ]);
-
     }
 
     /**
