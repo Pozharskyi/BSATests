@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Transformers\UsersTransformer;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,17 @@ use Response;
 
 class UsersController extends Controller
 {
+
+    private $usersTransformer;
+
+    /**
+     * UsersController constructor.
+     * @param $usersTransformer
+     */
+    public function __construct(UsersTransformer $usersTransformer)
+    {
+        $this->usersTransformer = $usersTransformer;
+    }
 
 
     /**
@@ -23,18 +35,9 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $user->books;
         return Response::json([
-            'data' => $this->transform($user)
+            'data' => $this->usersTransformer->transform($user)
         ],200);
     }
 
-    private function transform(User $user)
-    {
-        return [
-            'id' => $user->id,
-            'firstName' => $user->firstname,
-            'lastName' => $user->lastname,
-            'email' => $user->email
-        ];
-    }
 
 }

@@ -4,7 +4,7 @@ namespace Acme\Transformers;
 class BooksTransformer extends Transformer
 {
 
-    function transform($book)
+    public function transform($book)
     {
         return [
             'id' => $book['id'],
