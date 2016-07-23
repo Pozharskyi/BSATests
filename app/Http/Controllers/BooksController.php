@@ -56,10 +56,8 @@ class BooksController extends ApiController
             return $this->respondUnprocessableEntity('Request is not valid');
         } else {
             $input = $request->only('title', 'author', 'year', 'genre');
-            $book = Book::create($input);
-            return $this->setStatusCode(201)->respond([
-                'data' => $this->booksTransformer->transform($book->toArray())
-            ]);
+            Book::create($input);
+            return $this->respondCreated();
         }
 
 

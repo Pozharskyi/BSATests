@@ -57,6 +57,13 @@ class ApiController extends Controller
         return $this->setStatusCode(422)->respondWithError($message);
     }
 
+    public function respondCreated()
+    {
+        return $this->setStatusCode(201)->respond([
+            'message' => 'Book has been created successfully'
+        ]);
+    }
+
     /**
      * @param $message
      * @return \Illuminate\Http\JsonResponse
