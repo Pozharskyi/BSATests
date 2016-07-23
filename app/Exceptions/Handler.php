@@ -6,8 +6,10 @@ use Exception;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -45,6 +47,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof MethodNotAllowedHttpException) {
+            $errorResponse = [
+                'error' => [
+                    'message' => 'Sorry, the method is not allowed.',
+                    'statusCode' => 405
+                ]
+            ];
+            return Response::json($errorResponse, 405);
+        }
         return parent::render($request, $e);
+
     }
 }
