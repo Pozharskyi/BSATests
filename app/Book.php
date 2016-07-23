@@ -13,9 +13,4 @@ class Book extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function path()
-    {
-        return route('books.show', ['book' => $this->id]);
-    }
 }
