@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Transformers\BooksTransformer;
 use App\Book;
 use App\User;
 use Illuminate\Http\Request;
@@ -11,6 +12,18 @@ use Response;
 
 class UsersBooksController extends Controller
 {
+    private $booksTransformer;
+
+    /**
+     * UsersBooksController constructor.
+     * @param $booksTransformer
+     */
+    public function __construct(BooksTransformer $booksTransformer)
+    {
+        $this->booksTransformer = $booksTransformer;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +36,7 @@ class UsersBooksController extends Controller
         $user = User::findOrFail($user_id);
         $books = $user->books;
         return Response::json([
-            'data' => $books
+            'data' => $this->booksTransformer->transformCollection($books->all())
         ]);
     }
 
@@ -49,6 +62,7 @@ class UsersBooksController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     *
      *
      * @param  int $user_ip
      * @param  int $book_id
