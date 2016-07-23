@@ -58,7 +58,7 @@ class BooksController extends ApiController
             $input = $request->only('title', 'author', 'year', 'genre');
             $book = Book::create($input);
             return $this->setStatusCode(201)->respond([
-                'data' => $this->booksTransformer->transform($book)
+                'data' => $this->booksTransformer->transform($book->toArray())
             ]);
         }
 
@@ -78,7 +78,7 @@ class BooksController extends ApiController
             return $this->respondNotFound('Book does not exist');
         }
         return $this->setStatusCode(200)->respond([
-            'data' => $this->booksTransformer->transform($book)
+            'data' => $this->booksTransformer->transform($book->toArray())
         ]);
     }
 

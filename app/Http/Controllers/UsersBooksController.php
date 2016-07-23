@@ -3,29 +3,32 @@
 namespace App\Http\Controllers;
 
 use Acme\Transformers\BooksTransformer;
+use Acme\Transformers\UsersTransformer;
 use App\Book;
 use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use Response;
+
 
 class UsersBooksController extends ApiController
 {
     private $booksTransformer;
+    private $usersTransformer;
 
     /**
      * UsersBooksController constructor.
      * @param $booksTransformer
      */
-    public function __construct(BooksTransformer $booksTransformer)
+    public function __construct(BooksTransformer $booksTransformer, UsersTransformer $usersTransformer)
     {
         $this->booksTransformer = $booksTransformer;
+        $this->usersTransformer = $usersTransformer;
     }
 
 
     /**
-     * Display a listing of the resource.
+     * Display a list of all users books.
      *
      * @param  int $user_id
      *
@@ -65,7 +68,7 @@ class UsersBooksController extends ApiController
         $book->save();
         $user->books;                                   //fetch user with all his books
         return $this->setStatusCode(200)->respond([
-            'data' => $user
+            'data' => $this->usersTransformer->transform($user->toArray())
         ]);
     }
 
@@ -79,7 +82,7 @@ class UsersBooksController extends ApiController
      */
     public function destroy($user_id, $book_id)
     {
-        $book = Book::where('id',$book_id)->where('user_id',$user_id)->first();
+        $book = Book::where('id', $book_id)->where('user_id', $user_id)->first();
         if (!$book) {
             return $this->respondNotFound('User does not has this book');
         }

@@ -38,7 +38,7 @@ class UsersController extends ApiController
         }
         $user->books;
         return $this->setStatusCode(200)->respond([
-            'data' => $this->usersTransformer->transform($user)
+            'data' => $this->usersTransformer->transform($user->toArray())
         ]);
     }
 
