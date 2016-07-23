@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Transformers\BooksTransformer;
 use App\Book;
 use Illuminate\Http\Request;
 
@@ -10,6 +11,15 @@ use Response;
 
 class BooksController extends Controller
 {
+    private $booksTransformer;
+    /**
+     * BooksController constructor.
+     */
+    public function __construct(BooksTransformer $booksTransformer)
+    {
+        $this->booksTransformer = $booksTransformer;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +29,7 @@ class BooksController extends Controller
     {
         $books = Book::all();
         return Response::json([
-            'data' => $books
+            'data' => $this->booksTransformer->transformCollection($books->all())
         ]);
     }
 
@@ -35,7 +45,7 @@ class BooksController extends Controller
         $input = $request->only('title', 'author', 'year', 'genre');
         $book = Book::create($input);
         return Response::json([
-            'data' => $book
+            'data' => $this->booksTransformer->transform($book)
         ]);
     }
 
@@ -47,9 +57,17 @@ class BooksController extends Controller
      */
     public function show($id)
     {
-        $book = Book::findOrFail($id);
+        $book = Book::find($id);
+        if (!$book) {
+
+            return Response::json([
+                'error' => [
+                    'message' => 'Book does not exist'
+                ]
+            ], 404);
+        }
         return Response::json([
-            'data' => $book
+            'data' => $this->booksTransformer->transform($book)
         ]);
     }
 
@@ -63,9 +81,14 @@ class BooksController extends Controller
     public function destroy($id)
     {
         $book = Book::findOrFail($id);
+
         $book->delete();
         return Response::json([
             'success' => true
         ]);
     }
+
+
+
+
 }

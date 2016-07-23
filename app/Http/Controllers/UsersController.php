@@ -23,8 +23,18 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $user->books;
         return Response::json([
-            'data' => $user
-        ]);
+            'data' => $this->transform($user)
+        ],200);
+    }
+
+    private function transform(User $user)
+    {
+        return [
+            'id' => $user->id,
+            'firstName' => $user->firstname,
+            'lastName' => $user->lastname,
+            'email' => $user->email
+        ];
     }
 
 }
