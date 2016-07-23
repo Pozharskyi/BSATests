@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Response;
 
-class UsersController extends Controller
+class UsersController extends ApiController
 {
 
     private $usersTransformer;
@@ -32,11 +32,14 @@ class UsersController extends Controller
      */
     public function show($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::find($id);
+        if (!$user) {
+            return $this->respondNotFound('User does not exist');
+        }
         $user->books;
-        return Response::json([
+        return $this->setStatusCode(200)->respond([
             'data' => $this->usersTransformer->transform($user)
-        ],200);
+        ]);
     }
 
 

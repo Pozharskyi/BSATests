@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Response;
 
-class UsersBooksController extends Controller
+class UsersBooksController extends ApiController
 {
     private $booksTransformer;
 
@@ -33,9 +33,12 @@ class UsersBooksController extends Controller
      */
     public function index($user_id)
     {
-        $user = User::findOrFail($user_id);
+        $user = User::find($user_id);
+        if (!$user) {
+            return $this->respondNotFound('User does not exist');
+        }
         $books = $user->books;
-        return Response::json([
+        return $this->setStatusCode(200)->respond([
             'data' => $this->booksTransformer->transformCollection($books->all())
         ]);
     }
@@ -43,25 +46,31 @@ class UsersBooksController extends Controller
     /**
      * Add book to user.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $user_id
-     * @param  int  $book_id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $user_id
+     * @param  int $book_id
      * @return \Illuminate\Http\Response
      */
     public function update($user_id, Request $request, $book_id)
     {
         $user = User::find($user_id);
+        if (!$user) {
+            return $this->respondNotFound('User does not exist');
+        }
         $book = Book::find($book_id);
+        if (!$book) {
+            return $this->respondNotFound('Book does not exist');
+        }
         $book->user()->associate($user);
         $book->save();
-        $user->books;
-        return Response::json([
+        $user->books;                                   //fetch user with all his books
+        return $this->setStatusCode(200)->respond([
             'data' => $user
         ]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the book from user.
      *
      *
      * @param  int $user_ip
@@ -70,11 +79,12 @@ class UsersBooksController extends Controller
      */
     public function destroy($user_id, $book_id)
     {
-        $book = Book::findOrFail($book_id);
+        $book = Book::where('id',$book_id)->where('user_id',$user_id)->first();
+        if (!$book) {
+            return $this->respondNotFound('User does not has this book');
+        }
         $book->user()->dissociate();
         $book->save();
-        return Response::json([
-            'success' => true
-        ]);
+        return $this->setStatusCode(204)->respond([]);
     }
 }

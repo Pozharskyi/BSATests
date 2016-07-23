@@ -8,10 +8,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Response;
+use Validator;
 
-class BooksController extends Controller
+class BooksController extends ApiController
 {
     private $booksTransformer;
+
     /**
      * BooksController constructor.
      */
@@ -28,7 +30,7 @@ class BooksController extends Controller
     public function index()
     {
         $books = Book::all();
-        return Response::json([
+        return $this->setStatusCode(200)->respond([
             'data' => $this->booksTransformer->transformCollection($books->all())
         ]);
     }
@@ -42,11 +44,25 @@ class BooksController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->only('title', 'author', 'year', 'genre');
-        $book = Book::create($input);
-        return Response::json([
-            'data' => $this->booksTransformer->transform($book)
-        ]);
+        $rules = [
+            'year' => 'required|integer',
+            'title' => 'required|regex:/^[(a-zA-Z\s)]+$/u',         //Regex for words with spaces
+            'author' => 'required|regex:/^[(a-zA-Z\s)]+$/u',
+            'genre' => 'required|alpha'
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return $this->respondUnprocessableEntity('Request is not valid');
+        } else {
+            $input = $request->only('title', 'author', 'year', 'genre');
+            $book = Book::create($input);
+            return $this->setStatusCode(201)->respond([
+                'data' => $this->booksTransformer->transform($book)
+            ]);
+        }
+
+
     }
 
     /**
@@ -59,14 +75,9 @@ class BooksController extends Controller
     {
         $book = Book::find($id);
         if (!$book) {
-
-            return Response::json([
-                'error' => [
-                    'message' => 'Book does not exist'
-                ]
-            ], 404);
+            return $this->respondNotFound('Book does not exist');
         }
-        return Response::json([
+        return $this->setStatusCode(200)->respond([
             'data' => $this->booksTransformer->transform($book)
         ]);
     }
@@ -80,15 +91,13 @@ class BooksController extends Controller
      */
     public function destroy($id)
     {
-        $book = Book::findOrFail($id);
-
+        $book = Book::find($id);
+        if (!$book) {
+            return $this->respondNotFound('Book does not exist');
+        }
         $book->delete();
-        return Response::json([
-            'success' => true
-        ]);
+        return $this->setStatusCode(204)->respond([]);
     }
-
-
 
 
 }
