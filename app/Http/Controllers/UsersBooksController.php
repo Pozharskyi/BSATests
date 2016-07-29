@@ -90,4 +90,21 @@ class UsersBooksController extends ApiController
         $book->save();
         return $this->setStatusCode(204)->respond([]);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($user_id, $book_id)
+    {
+        $book = Book::where('id', $book_id)->where('user_id', $user_id)->first();
+        if (!$book) {
+            return $this->respondNotFound('Book does not exist');
+        }
+        return $this->setStatusCode(200)->respond([
+            'data' => $this->booksTransformer->transform($book->toArray())
+        ]);
+    }
 }

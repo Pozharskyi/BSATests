@@ -23,7 +23,18 @@ class UsersController extends ApiController
         $this->usersTransformer = $usersTransformer;
     }
 
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $users = User::all();
+        return $this->setStatusCode(200)->respond([
+            'data' => $this->usersTransformer->transformCollection($users->toArray())
+        ]);
+    }
     /**
      * Display the specified user.
      *

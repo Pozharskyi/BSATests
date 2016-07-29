@@ -52,6 +52,7 @@ class ApiController extends Controller
     {
         return $this->setStatusCode(500)->respondWithError($message);
     }
+
     public function respondUnprocessableEntity($message = 'Unprocessable Entity')
     {
         return $this->setStatusCode(422)->respondWithError($message);
@@ -61,6 +62,12 @@ class ApiController extends Controller
     {
         return $this->setStatusCode(201)->respond([
             'message' => 'Book has been created successfully'
+        ]);
+    }
+    public function respondUpdate()
+    {
+        return $this->setStatusCode(200)->respond([
+            'message' => 'Book has been updated successfully'
         ]);
     }
 
@@ -83,7 +90,14 @@ class ApiController extends Controller
      * @param array $headers
      * @return \Illuminate\Http\JsonResponse
      */
-    public function respond($data, $headers = [])
+    public function respond($data, $headers = [
+//        'Access-Control-Allow-Origin' => '*',
+//        "Access-Control-Allow-Credentials" => "true",
+//        'Access-Control-Allow-Headers' => 'Origin, X-Requested-With, Content-Type, Accept, X-Token',
+//        'Access-Control-Allow-Methods' => 'GET,PUT,POST,DELETE,OPTIONS',
+//
+//        'Access-Control-Allow-Credentials' =>true
+    ])
     {
         return Response::json($data, $this->getStatusCode(), $headers);
     }

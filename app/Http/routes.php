@@ -1,24 +1,17 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the controller to call when that URI is requested.
-|
-*/
 
-Route::group(['prefix' => 'api/v1', 'middleware' => 'throttle:4'], function () {        //v1 - the version of the API, throttle:4 - rate limiting 9 request per minute
+Route::group(['prefix' => 'api/v1', 'middleware' => 'throttle:30'], function () {        //v1 - the version of the API, throttle:4 - rate limiting 30 request per minute
     Route::resource('books', 'BooksController', ['except' => [
-        'update', 'edit', 'create'
+         'edit', 'create'
     ]]);
     Route::resource('users', 'UsersController', ['only' => [
-        'show']
+        'show', 'index']
     ]);
     Route::resource('users.books', 'UsersBooksController', ['only' => [
-        'index', 'destroy', 'update']
+        'index', 'destroy', 'update', 'show']
     ]);
 });
+//Route::get('/', function () {
+//    return File::get(public_path() . '/welcome.html');
+//});
