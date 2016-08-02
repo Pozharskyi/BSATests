@@ -12,6 +12,6 @@ Route::group(['prefix' => 'api/v1', 'middleware' => 'throttle:30'], function () 
         'index', 'destroy', 'update', 'show']
     ]);
 });
-//Route::get('/', function () {
-//    return File::get(public_path() . '/welcome.html');
-//});
+Route::get('/', function () {
+    return view('base');
+});
