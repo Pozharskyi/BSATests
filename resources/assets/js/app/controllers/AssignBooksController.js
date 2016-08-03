@@ -13,7 +13,7 @@ var AssignBooksController = {
         view.on('childview:usersBook:assignClicked', function (childview, model) {
             Library.request('usersBook:assign', userId, model.get('id'));
             Library.trigger('users:list');
-            alert('book has benn assigned successfully');
+            alert('book has benn assigned successfully!!!!');
         });
 
         Library.mainRegion.show(view);
