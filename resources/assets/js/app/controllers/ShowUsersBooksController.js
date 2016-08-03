@@ -1,3 +1,4 @@
+var $ = require('jquery');
 var Library = require('./../app');
 var ShowUsersBooksView = require('../views/ShowUsersBooksView');
 var ShowBookView = require('../views/ShowBookView');

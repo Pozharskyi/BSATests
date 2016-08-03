@@ -1,6 +1,10 @@
+var $ = require('jquery');
+
+var Backbone = require('backbone');
+
+
 var Library = require('./../app');
 var UserBookModel = require('../models/UserBookModel');
-var API = require('./UserBooksModelAPI');
 
 var EntitiesUsersBooks = Backbone.Collection.extend({
     url: function () {
@@ -14,8 +18,25 @@ var EntitiesUsersBooks = Backbone.Collection.extend({
     },
     model: UserBookModel
 });
+var API = {
+    getUsersBookEntities: function (usersId) {
+        var books = new EntitiesUsersBooks([], {group: usersId});
+        console.log(books);
+        books.fetch();
+        return books;
+    },
 
-
+    assignBookToUser: function(userId, bookId){
+        $.ajax({
+            url: 'http://localhost:8000/api/v1/users/'+userId+'/books/'+bookId,
+            type: 'PUT',
+            success: function(data) {
+                console.log('book assigned successfully');
+                console.log(data);
+            }
+        });
+    }
+};
 Library.reqres.setHandler('usersBook:entities', function (userId) {
     return API.getUsersBookEntities(userId);
 });

@@ -3,6 +3,11 @@ var ShowUserController = require('../controllers/ShowUserController');
 
 var AssignBooksController = require('../controllers/AssignBooksController');
 var ShowUsersBooksController = require('../controllers/ShowUsersBooksController');
+
+var UserModel = require('../models/UserModel');
+var UsersModel = require('../models/UsersModel');
+var UserBooksModel = require('../models/UserBooksModel');
+var UserBookModel = require('../models/UserBookModel');
 API = {
     listUsers: function () {
         ListUsersController.listUsers();

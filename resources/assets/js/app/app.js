@@ -4,6 +4,13 @@ var Marionette = require('backbone.marionette');
 var Backbone = require('backbone');
 Backbone.$ = $;
 Backbone._ = _;
+//var BooksModel = require('../models/BooksModel');
+//var UserModel = require('../models/UserModel');
+//var UsersModel = require('../models/UsersModel');
+//var UserBooksModel = require('../models/UserBooksModel');
+//var UserBookModel = require('../models/UserBookModel');
+
+
 var Library = new Marionette.Application();
 
 Library.addRegions({

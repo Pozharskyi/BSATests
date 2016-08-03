@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 var UserModel = require('./UserModel');
 
 var API = {

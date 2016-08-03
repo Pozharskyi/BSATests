@@ -1,3 +1,5 @@
+var $ = require('jquery');
+
 var EntitiesUsersBook = require('./UserBookModel');
 var API = {
     getUsersBookEntity: function (userId, bookId) {

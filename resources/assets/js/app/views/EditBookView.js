@@ -1,4 +1,6 @@
-//Library.module('BooksApp.Edit', function (Edit, Library, Backbone, Marionette, $, _) {
+var _ = require('underscore');
+var $ = require('jquery');
+
 var Marionette = require('backbone.marionette');
 var app = require('./../app');
 

@@ -1,4 +1,3 @@
-//Library.module('BooksApp.Create', function (Create, Library, Backbone, Marionette, $, _) {
 var Library = require('./../app');
 var BookModel = require('../models/BookModel');
 var CreateBookView = require('../views/CreateBookView');

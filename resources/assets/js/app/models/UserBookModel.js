@@ -1,5 +1,9 @@
+var Backbone = require('backbone');
+
+
+var $ = require('jquery');
+
 var Library = require('./../app');
-var API = require('./UserBookModelAPI');
 var EntitiesUsersBook = Backbone.Model.extend({
 
     urlRoot: function () {
@@ -23,7 +27,22 @@ var EntitiesUsersBook = Backbone.Model.extend({
     }
 
 });
+var API = {
+    getUsersBookEntity: function (userId, bookId) {
+        var book = new EntitiesUsersBook({id: bookId}, {group: userId});
+        var defer = $.Deferred();
 
+        book.fetch({
+            success: function (data) {
+                defer.resolve(data);
+            },
+            error: function (data) {
+                defer.resolve(undefined);
+            }
+        });
+        return defer.promise();
+    },
+};
 Library.reqres.setHandler('usersBook:entity', function (userId, bookId) {
     return API.getUsersBookEntity(userId, bookId);
 });

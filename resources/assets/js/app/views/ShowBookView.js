@@ -1,4 +1,3 @@
-//Library.module('BooksApp.Show', function(Show, Librery, Backbone, Marionette, $, _){
 var Marionette = require('backbone.marionette');
 var app = require('./../app');
 

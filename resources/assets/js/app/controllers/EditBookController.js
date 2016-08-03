@@ -1,4 +1,5 @@
-//Library.module('BooksApp.Edit', function(Edit, Library, Backbone, Marionette, $, _){
+
+var $ = require('jquery');
 var Library = require('./../app');
 var BookModel = require('../models/BookModel');
 var EditBookView = require('../views/EditBookView');
@@ -39,4 +40,4 @@ var EditBookController = {
     }
 };
 
-exports.EditBookController = EditBookController;
+module.exports = EditBookController;

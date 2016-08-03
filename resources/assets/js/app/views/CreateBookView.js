@@ -1,4 +1,5 @@
-//Library.module('BooksApp.Create', function (Create, Library, Backbone, Marionette, $, _) {
+var $ = require('jquery');
+var _ = require('underscore');
 var Marionette = require('backbone.marionette');
 var app = require('./../app');
 var BookModel = require('../models/BookModel');

@@ -4,8 +4,9 @@ var ListBooksView = require('../views/ListBooksView');
 
     var ListController = {
         listBooks: function(){
+            console.log('in listBooks method');
             var books = Library.request('book:entities');
-
+            console.log(books);
             var booksListView = new ListBooksView({
                 collection: books
             });
