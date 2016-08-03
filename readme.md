@@ -1,23 +1,18 @@
 # BSA homework CRUD library on marionette js Works with REST API
 
-##Deployment
+##Deployment:
 
-## create BD and add properties to .env
+create BD and add properties to .env
 
+ - artisan migrate
 
-## artisan migrate
+ - artisan DB:seed
 
+ - npm install
 
-## artisan DB:seed
+ - bower install
 
-
-## npm install
-
-
-## bower install
-
-
-## grunt dev (or grunt prod / grunt stage)
+ - grunt dev (or grunt prod / grunt stage)
 
 
 Application consists of:
