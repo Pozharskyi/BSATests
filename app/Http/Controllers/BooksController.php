@@ -68,7 +68,7 @@ class BooksController extends ApiController
 //                },'default');
 //            }
 
-            $this->dispatch(new SendNewBookNotificationEmail($book))->onQueue('LibreryRestFull');
+            $this->dispatch(new SendNewBookNotificationEmail($book));
             return $this->respondCreated();
 
         }
@@ -144,6 +144,10 @@ class BooksController extends ApiController
             }
             $input = $request->only('title', 'author', 'year', 'genre');
             $book->update($input);
+            Mail::queue('emails.test', ['testVar' => 'Some testVar'],
+                function ($message) {
+                    $message->to('Pozharskyi@gmail.com')->subject('from queue!!');
+                });
             return $this->respondUpdate();
         }
     }

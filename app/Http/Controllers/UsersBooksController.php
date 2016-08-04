@@ -16,11 +16,12 @@ class UsersBooksController extends ApiController
 {
     private $booksTransformer;
     private $usersTransformer;
-    const MAX_BOOK_TAKEN_DAYS = 60 * 60 * 12 * 30;
+    const MAX_BOOK_TAKEN_DAYS = 60 * 60 * 24 * 30;
 
     /**
      * UsersBooksController constructor.
-     * @param $booksTransformer
+     * @param BooksTransformer $booksTransformer
+     * @param UsersTransformer $usersTransformer
      */
     public function __construct(BooksTransformer $booksTransformer, UsersTransformer $usersTransformer)
     {
