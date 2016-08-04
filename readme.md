@@ -2,7 +2,7 @@
 
 ##Deployment:
 
-create BD and add properties to .env
+ - create BD and add properties to .env
 
  - artisan migrate
 
