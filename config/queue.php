@@ -63,6 +63,16 @@ return [
             'queue' => 'default',
             'expire' => 60,
         ],
+        'iron' => [
+            'driver'  => 'iron',
+            'host'    => 'mq-aws-eu-west-1-1.iron.io',
+            'token'   => 'Jxfp1XDxcghTkjfCFnKq',
+            'project' => '57a35fb697e9bd0008fa2e04',
+            'queue'   => 'LibreryRestFull',
+            'encrypt' => true,
+            'timeout' => 60
+
+        ],
 
     ],
 

@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use Acme\Transformers\BooksTransformer;
 use App\Book;
+use App\Jobs\SendNewBookNotificationEmail;
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Mail;
 use Response;
 use Validator;
 
@@ -56,10 +59,19 @@ class BooksController extends ApiController
             return $this->respondUnprocessableEntity('Request is not valid');
         } else {
             $input = $request->only('title', 'author', 'year', 'genre');
-            Book::create($input);
-            return $this->respondCreated();
-        }
+            $book = Book::create($input);
 
+//            $users = User::all();
+//            foreach($users as $user){
+//                Mail::later(5,'emails.new_book_notify', ['user' => $user, 'book' => $book], function ($message) use ($user){
+//                    $message->to($user->email)->subject('New book available');
+//                },'default');
+//            }
+
+            $this->dispatch(new SendNewBookNotificationEmail($book))->onQueue('LibreryRestFull');
+            return $this->respondCreated();
+
+        }
 
     }
 

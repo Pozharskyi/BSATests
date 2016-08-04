@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Acme\Transformers\BooksTransformer;
 use Acme\Transformers\UsersTransformer;
 use App\Book;
+use App\Jobs\SendRefundNotificationEmail;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,7 @@ class UsersBooksController extends ApiController
 {
     private $booksTransformer;
     private $usersTransformer;
+    const MAX_BOOK_TAKEN_DAYS = 60 * 60 * 12 * 30;
 
     /**
      * UsersBooksController constructor.
@@ -67,6 +69,8 @@ class UsersBooksController extends ApiController
         $book->user()->associate($user);
         $book->save();
         $user->books;                                   //fetch user with all his books
+
+        $this->dispatch((new SendRefundNotificationEmail($user,$book))->delay(self::MAX_BOOK_TAKEN_DAYS));
         return $this->setStatusCode(200)->respond([
             'data' => $this->usersTransformer->transform($user->toArray())
         ]);
