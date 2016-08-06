@@ -48,7 +48,7 @@ class BooksController extends ApiController
     public function store(Request $request)
     {
         $rules = [
-            'year' => 'required|integer',
+            'year' => 'required|date_format:Y',
             'title' => 'required|regex:/^[(a-zA-Z\s)]+$/u',         //Regex for words with spaces
             'author' => 'required|regex:/^[(a-zA-Z\s)]+$/u',
             'genre' => 'required|alpha'
@@ -61,12 +61,6 @@ class BooksController extends ApiController
             $input = $request->only('title', 'author', 'year', 'genre');
             $book = Book::create($input);
 
-//            $users = User::all();
-//            foreach($users as $user){
-//                Mail::later(5,'emails.new_book_notify', ['user' => $user, 'book' => $book], function ($message) use ($user){
-//                    $message->to($user->email)->subject('New book available');
-//                },'default');
-//            }
 
             $this->dispatch(new SendNewBookNotificationEmail($book));
             return $this->respondCreated();
@@ -129,25 +123,14 @@ class BooksController extends ApiController
         if ($validator->fails()) {
             return $this->respondUnprocessableEntity('Request is not valid');
         } else {
-//            $book = Book::find($id);
-//            if (Gate::denies('updateBook',$book)) {
-//                abort(403, 'Access denied');
-//            }
-//
-//            $book->update($request->all());
-//
-//            Session::flash('message', 'Book has been updated');
-//            return redirect()->route('books.index');
+
             $book = Book::find($id);
             if (!$book) {
                 return $this->respondNotFound('Book does not exist');
             }
             $input = $request->only('title', 'author', 'year', 'genre');
             $book->update($input);
-            Mail::queue('emails.test', ['testVar' => 'Some testVar'],
-                function ($message) {
-                    $message->to('Pozharskyi@gmail.com')->subject('from queue!!');
-                });
+
             return $this->respondUpdate();
         }
     }

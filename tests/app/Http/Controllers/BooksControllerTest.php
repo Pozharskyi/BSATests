@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class BooksControllerTest extends TestCase
 {
     use Illuminate\Foundation\Testing\DatabaseMigrations;
+    const USERS_AMOUNT = 2;
     const BOOKS_AMOUNT = 9;
     protected $books;
     protected $users;
@@ -15,7 +16,7 @@ class BooksControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->users = factory(App\User::class, 2)->create();
+        $this->users = factory(App\User::class, self::USERS_AMOUNT)->create();
         $usersId = $this->users->lists('id')->toArray();
         $this->books = factory(App\Book::class, self::BOOKS_AMOUNT)->create(['user_id' => $usersId[array_rand($usersId)]]);
     }
@@ -43,8 +44,7 @@ class BooksControllerTest extends TestCase
                 'userId' => $book->user_id
             ]);
         }
-//        $this->json('Get', route('api.v1.books.index'))
-//            ->seeJson($books->toArray());
+
     }
 
     /** @test */
@@ -113,6 +113,7 @@ class BooksControllerTest extends TestCase
     /** @test */
     public function testStoreShouldResponseStatusOkWhenBookValid()
     {
+        $this->expectsJobs(App\Jobs\SendNewBookNotificationEmail::class);
         $this->json('POST', route('api.v1.books.store'), [
             'title' => 'testTitle',
             'author' => 'testAuthor',
@@ -148,12 +149,12 @@ class BooksControllerTest extends TestCase
             'genre' => 'Horror'
         ])->seeStatusCode(422);
 
-//        $this->json('POST', route('api.v1.books.store'), [
-//            'title' => 'testTitle',
-//            'author' => 'testAuthor asdasd',
-//            'year' => 1999,
-//            'genre' => 'Horror'
-//        ])->seeStatusCode(422);
+        $this->json('POST', route('api.v1.books.store'), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor',
+            'year' => 1999,
+            'genre' => 'Horror asafdsf'
+        ])->seeStatusCode(422);
 
         $this->json('POST', route('api.v1.books.store'), [
             'title' => 'testTitle',
@@ -173,6 +174,20 @@ class BooksControllerTest extends TestCase
             'author' => 'testAuthor',
             'year' => 1999,
             'genre' => 'Horror34'
+        ])->seeStatusCode(422);
+
+        $this->json('POST', route('api.v1.books.store'), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor123',
+            'year' => 1999,
+            'genre' => 'Horror'
+        ])->seeStatusCode(422);
+
+        $this->json('POST', route('api.v1.books.store'), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor',
+            'year' => 1999343234,
+            'genre' => 'Horror'
         ])->seeStatusCode(422);
     }
 
