@@ -113,7 +113,7 @@ class BooksController extends ApiController
     public function update(Request $request, $id)
     {
         $rules = [
-            'year' => 'required|integer',
+            'year' => 'required|date_format:Y',
             'title' => 'required|regex:/^[(a-zA-Z\s)]+$/u',     //Regex for words with spaces
             'author' => 'required|regex:/^[(a-zA-Z\s)]+$/u',
             'genre' => 'required|alpha'

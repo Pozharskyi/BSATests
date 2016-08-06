@@ -34,7 +34,7 @@ class BooksControllerTest extends TestCase
     {
 
 
-        $this->call('Get', route('api.v1.books.index'));
+        $this->call('GET', route('api.v1.books.index'));
         foreach ($this->books as $book) {
             $this->seeJson([
                 'title' => $book->title,
@@ -191,6 +191,93 @@ class BooksControllerTest extends TestCase
         ])->seeStatusCode(422);
     }
 
+    /** @test */
+    public function testUpdateShouldResponseStatusOkWhenBookValid()
+    {
+        $book = Book::findOrFail(rand(1, self::BOOKS_AMOUNT));
+
+        $this->json('PUT', route('api.v1.books.update', [$book->id]), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor',
+            'year' => 2099,
+            'genre' => 'Drama'
+        ])->seeStatusCode(200);
+
+    }
+
+    /** @test */
+    public function testUpdateShouldUpdateWhenBookValid()
+    {
+        $book = Book::findOrFail(rand(1, self::BOOKS_AMOUNT));
+
+        $this->json('PUT', route('api.v1.books.update', [$book->id]), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor',
+            'year' => 2099,
+            'genre' => 'Drama'
+        ])->seeInDatabase('books', [
+            'title' => 'testTitle',
+            'author' => 'testAuthor',
+            'year' => 2099,
+            'genre' => 'Drama',
+            'id' => $book->id,
+            'user_id' => $book->user_id
+        ]);
+
+    }
+
+    public function testUpdateShouldResponseStatus422WhenBookNotValid()
+    {
+        $book = Book::findOrFail(rand(1, self::BOOKS_AMOUNT));
+
+        $this->json('PUT', route('api.v1.books.update', [$book->id]), [
+            'title' => 123,
+            'author' => 'testAuthor',
+            'year' => 1999,
+            'genre' => 'Horror'
+        ])->seeStatusCode(422);
+
+        $this->json('PUT', route('api.v1.books.update', [$book->id]), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor',
+            'year' => 1999,
+            'genre' => 'Horror asafdsf'
+        ])->seeStatusCode(422);
+
+        $this->json('PUT', route('api.v1.books.update', [$book->id]), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor',
+            'genre' => 'Horror'
+        ])->seeStatusCode(422);
+
+        $this->json('PUT', route('api.v1.books.update', [$book->id]), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor',
+            'year' => 'string',
+            'genre' => 'Horror'
+        ])->seeStatusCode(422);
+
+        $this->json('PUT', route('api.v1.books.update', [$book->id]), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor',
+            'year' => 1999,
+            'genre' => 'Horror34'
+        ])->seeStatusCode(422);
+
+        $this->json('PUT', route('api.v1.books.update', [$book->id]), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor123',
+            'year' => 1999,
+            'genre' => 'Horror'
+        ])->seeStatusCode(422);
+
+        $this->json('PUT', route('api.v1.books.update', [$book->id]), [
+            'title' => 'testTitle',
+            'author' => 'testAuthor',
+            'year' => 1999343234,
+            'genre' => 'Horror'
+        ])->seeStatusCode(422);
+    }
 
     public function tearDown()
     {
