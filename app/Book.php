@@ -7,7 +7,7 @@ class Book extends Model
 {
     public $table = 'books';
     public $timestamps = false;
-    public $fillable = ['title', 'author', 'year', 'genre'];
+    public $fillable = ['title', 'author', 'year', 'genre', 'user_id'];
 
     public function user()
     {

@@ -17,8 +17,8 @@ class User extends Model
         return $this->hasMany(Book::class);
     }
 
-    public function path()
-    {
-        return route('users.show', ['user' => $this->id]);
-    }
+//    public function path()
+//    {
+//        return route('users.show', ['user' => $this->id]);
+//    }
 }
